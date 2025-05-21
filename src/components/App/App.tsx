@@ -1,29 +1,28 @@
 import { useEffect, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 import Modal from 'react-modal';
-import { Toaster } from 'react-hot-toast';
 
-import SearchBar from '../SearchBar/SearchBar';
-import ImageGallery from '../ImageGallery/ImageGallery';
-import Loader from '../Loader/Loader';
-import ErrorMessage from '../ErrorMessage/ErrorMessage';
-import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn';
-import ImageModal from '../ImageModal/ImageModal';
-import { fetchImages } from '../../services/api';
+import SearchBar from '../SearchBar/SearchBar.tsx';
+import ImageGallery from '../ImageGallery/ImageGallery.tsx';
+import Loader from '../Loader/Loader.tsx';
+import ErrorMessage from '../ErrorMessage/ErrorMessage.tsx';
+import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn.tsx';
+import ImageModal from '../ImageModal/ImageModal.tsx';
+import { fetchImages, Image } from '../../services/api.ts';
 
 Modal.setAppElement('#root');
 
 function App() {
-  const [query, setQuery] = useState('');
-  const [images, setImages] = useState([]);
-  const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [modalData, setModalData] = useState(null);
-  const [totalPages, setTotalPages] = useState(0);
+  const [query, setQuery] = useState<string>('');
+  const [images, setImages] = useState<Image[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [modalData, setModalData] = useState<Image | null>(null);
+  const [totalPages, setTotalPages] = useState<number>(0);
 
   useEffect(() => {
     if (!query) return;
-
     async function getImages() {
       try {
         setIsLoading(true);
@@ -37,11 +36,14 @@ function App() {
         setIsLoading(false);
       }
     }
-
     getImages();
   }, [query, page]);
 
-  const handleSearch = value => {
+  const handleSearch = (value: string) => {
+    if (value.trim() === '') {
+      toast.error('Please enter a search term');
+      return;
+    }
     if (value !== query) {
       setQuery(value);
       setImages([]);
@@ -49,7 +51,7 @@ function App() {
     }
   };
 
-  const openModal = data => setModalData(data);
+  const openModal = (data: Image) => setModalData(data);
   const closeModal = () => setModalData(null);
 
   return (

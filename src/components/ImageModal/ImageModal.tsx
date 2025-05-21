@@ -1,7 +1,13 @@
 import Modal from 'react-modal';
 import styles from './ImageModal.module.css';
+import { Image } from '../../services/api';
 
-function ImageModal({ data, onClose }) {
+interface ImageModalProps {
+  data: Image;
+  onClose: () => void;
+}
+
+function ImageModal({ data, onClose }: ImageModalProps) {
   return (
     <Modal
       isOpen={!!data}
@@ -15,4 +21,4 @@ function ImageModal({ data, onClose }) {
   );
 }
 
-export default ImageModal
+export default ImageModal; 
